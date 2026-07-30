@@ -40,4 +40,32 @@ public class StockController {
         List<StockDto> stocks = stockService.getAllStocks();
         return ResponseEntity.ok(stocks);
     }
+
+    @GetMapping("/code/{code}")   // 최종 주소: GET /api/stocks/code/{code}
+    // (클래스 맨 위 @RequestMapping("/api/stocks")과 합쳐짐)
+    // ★ 왜 "/{code}"가 아니라 "/code/{code}"?
+    //   이미 @GetMapping("/{id}")가 있어서 "/{code}"로 만들면 주소 모양이 완전히 같아짐
+    //   → 스프링이 어느 메서드를 부를지 몰라서 앱이 시작조차 안 됨! (Ambiguous mapping 에러)
+    @Operation(summary = "주식 조회 (코드)", description = "종목 코드로 주식을 조회합니다")
+    public ResponseEntity<StockDto> getStockByCode(@PathVariable String code) {
+        StockDto stock = stockService.getStockByCode(code);   // Service에 일을 시키고
+        return ResponseEntity.ok(stock);                      // 결과를 200 OK로 반환
+    }
+
+    @PutMapping("/{id}")   // PUT = 수정 요청 (GET=조회, POST=생성, DELETE=삭제)
+    @Operation(summary = "주식 수정", description = "기존 주식 정보를 수정합니다")
+    public ResponseEntity<StockDto> updateStock(@PathVariable Long id,
+                                                @Valid @RequestBody StockDto stockDto) {
+    // id는 주소에서 (@PathVariable), 수정할 내용은 요청 본문 JSON에서 (@RequestBody) 받는다
+        StockDto updatedStock = stockService.updateStock(id, stockDto);
+        return ResponseEntity.ok(updatedStock);
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "주식 삭제", description = "주식을 삭제합니다")
+    public ResponseEntity<Void> deleteStock(@PathVariable Long id) {
+        stockService.deleteStock(id);
+        return ResponseEntity.noContent().build();
+    // 204 No Content = "지웠고, 돌려줄 내용은 없음" — curl에서 아무것도 안 나와도 성공!
+    }
 }

@@ -24,4 +24,12 @@ public class PortfolioController {
         List<PortfolioDto> portfolios = portfolioService.getUserPortfolio(userId);
         return ResponseEntity.ok(portfolios);
     }
+
+    @GetMapping("/user/{userId}/stock/{stockId}")
+    @Operation(summary = "특정 주식 포트폴리오", description = "특정 사용자의 특정 종목 보유 현황을 조회합니다")
+    public ResponseEntity<PortfolioDto> getUserStockPortfolio(
+            @PathVariable Long userId,
+            @PathVariable Long stockId) {
+        return ResponseEntity.ok(portfolioService.getUserStockPortfolio(userId, stockId));
+    }
 }

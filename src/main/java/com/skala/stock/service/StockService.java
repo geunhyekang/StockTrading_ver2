@@ -64,6 +64,24 @@ public class StockService {
         return convertToDto(updatedStock);
     }
 
+    /** [CRUD 5] 주식 삭제 */
+    @Transactional   // 삭제도 데이터를 바꾸는 일이므로 필수!
+    public void deleteStock(Long id) {
+    // 없는 id를 지우려 할 때 "왜 안 되는지" 알려주기 위해 존재 확인을 먼저 한다
+        if (!stockRepository.existsById(id)) {
+            throw new RuntimeException("주식을 찾을 수 없습니다: " + id);
+        }
+        stockRepository.deleteById(id);
+    }
+
+    /** [CRUD 6] 종목 코드로 조회 */
+    public StockDto getStockByCode(String code) {
+    // 조회만 하므로 @Transactional 불필요 (클래스 기본값인 읽기 전용으로 충분)
+        Stock stock = stockRepository.findByCode(code)
+                .orElseThrow(() -> new RuntimeException("주식을 찾을 수 없습니다: " + code));
+        return convertToDto(stock);
+    }
+
     private StockDto convertToDto(Stock stock) {
         return StockDto.builder()
                 .id(stock.getId())
