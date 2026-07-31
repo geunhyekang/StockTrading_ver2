@@ -1,0 +1,14 @@
+[
+  {
+    "color": "akita",
+    "type": "dog",
+    "size": "nano",
+    "name": "Giltol"
+  },
+  {
+    "color": "white",
+    "type": "dog",
+    "size": "nano",
+    "name": "Mintol"
+  }
+]
